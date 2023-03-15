@@ -16,15 +16,17 @@ while True:
     success, img = cap.read()
 
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    (thresh, blackAndWhiteImage) = cv2.threshold(img, 12, 255, cv2.THRESH_BINARY)
-    img=blackAndWhiteImage
-    # img = cv2.bitwise_not(img)
 
-    # row / collumn
-    img = img[830:925, 300:800]
+    # collumn / ROW
+    img = img[350:450, 530:830]
+
+    img = cv2.blur(img, [2, 2], 0)
+    img = cv2.threshold(img, 16, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+    img = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel, iterations=1)
 
     if cv2.waitKey(1) & 0xFF == ord('f'):
-        text = pytesseract.image_to_string(img)
+        text = pytesseract.image_to_string(img, config='--psm 6')
         print(text)
 
     cv2.imshow("video", img)
