@@ -1,8 +1,8 @@
 import cv2
 import pytesseract
 
-framewidth = 800
-frameheight = 600
+framewidth = 1920
+frameheight = 1080
 
 cap = cv2.VideoCapture(0)
 
@@ -15,14 +15,13 @@ while True:
 
     success, img = cap.read()
 
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    img = cv2.bitwise_not(img)
-    h = 600
-    w = 800
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    (thresh, blackAndWhiteImage) = cv2.threshold(img, 12, 255, cv2.THRESH_BINARY)
+    img=blackAndWhiteImage
+    # img = cv2.bitwise_not(img)
 
-    y = 500
-    x = 100
-    img = img[y:y + h, x:x + w]
+    # row / collumn
+    img = img[830:925, 300:800]
 
     if cv2.waitKey(1) & 0xFF == ord('f'):
         text = pytesseract.image_to_string(img)
