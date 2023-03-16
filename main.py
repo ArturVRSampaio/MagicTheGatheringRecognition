@@ -1,6 +1,7 @@
 import cv2
 import pytesseract
 import re
+import requests
 
 framewidth = 1920
 frameheight = 1080
@@ -22,6 +23,9 @@ while True:
     img = cv2.rectangle(img, (650, 400), (670, 450), (0,0,0), -1)
     img = cv2.rectangle(img, (760, 400), (830, 450), (0,0,0), -1)
 
+    # draw limits of the img
+    img = cv2.rectangle(img, (529, 349), (831, 451), (255,0,0), 1)
+
     # collumn / ROW
     img = img[350:450, 530:830]
 
@@ -36,7 +40,11 @@ while True:
 
         items = re.findall(r'\b\w+\b', rawText)
 
+        # params = {'number': items[0],'rarity': items[1],'set': items[2],'language': items[3]}
+        params = {'number': items[0],'set': items[2]}
+        r = requests.get("https://api.magicthegathering.io/v1/cards",params)
 
+        print(r.json())
         print(rawText)
         print(items)
         print("*******")
